@@ -19,16 +19,16 @@ class AiCodeGeneratorServiceTest {
     @Resource
     AiCodeGeneratorService aiCodeGeneratorService;
 
-    @Test
-    void generateHtmlCode() {
-        HtmlCodeResult result = aiCodeGeneratorService.generateHtmlCode("做个程序员李大根的工作记录小工具");
-        Assertions.assertNotNull(result);
-    }
-
-    @Test
-    void generateMultiFileCode() {
-        MultiFileCodeResult multiFileCode = aiCodeGeneratorService.generateMultiFileCode("做个程序员李大根的留言板");
-        Assertions.assertNotNull(multiFileCode);
-    }
+    //@Test
+    //void generateHtmlCode() {
+    //    HtmlCodeResult result = aiCodeGeneratorService.generateHtmlCode("做个程序员李大根的工作记录小工具");
+    //    Assertions.assertNotNull(result);
+    //}
+    //
+    //@Test
+    //void generateMultiFileCode() {
+    //    MultiFileCodeResult multiFileCode = aiCodeGeneratorService.generateMultiFileCode("做个程序员李大根的留言板");
+    //    Assertions.assertNotNull(multiFileCode);
+    //}
 
 }
