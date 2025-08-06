@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     INDEX idx_userName (userName)
     ) COMMENT = '用户' COLLATE = utf8mb4_unicode_ci;
 
--- 应用表
+-- 应用表  已经添加
 create table app
 (
     id           bigint auto_increment comment 'id' primary key,
