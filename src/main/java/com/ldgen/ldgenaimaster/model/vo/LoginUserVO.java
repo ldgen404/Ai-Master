@@ -1,19 +1,25 @@
-package com.ldgen.ldgenaimaster.model.dto.user;
+package com.ldgen.ldgenaimaster.model.vo;
 
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * 用户更新请求
+ * 脱敏后的登录用户信息
  */
 @Data
-public class UserUpdateRequest implements Serializable {
+public class LoginUserVO implements Serializable {
 
     /**
-     * id
+     * 用户 id
      */
     private Long id;
+
+    /**
+     * 账号
+     */
+    private String userAccount;
 
     /**
      * 用户昵称
@@ -26,7 +32,7 @@ public class UserUpdateRequest implements Serializable {
     private String userAvatar;
 
     /**
-     * 简介
+     * 用户简介
      */
     private String userProfile;
 
@@ -34,6 +40,16 @@ public class UserUpdateRequest implements Serializable {
      * 用户角色：user/admin
      */
     private String userRole;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     private static final long serialVersionUID = 1L;
 }

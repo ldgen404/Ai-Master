@@ -2,6 +2,9 @@ package com.ldgen.ldgenaimaster.common;
 
 import com.ldgen.ldgenaimaster.exception.ErrorCode;
 
+/**
+ * 快速构造响应结果的工具类
+ */
 public class ResultUtils {
 
     /**

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Ai 服务工厂
+ * AI 服务创建工厂
  */
 @Configuration
 public class AiCodeGeneratorServiceFactory {
@@ -31,6 +31,4 @@ public class AiCodeGeneratorServiceFactory {
                 .streamingChatModel(streamingChatModel)
                 .build();
     }
-
-
 }

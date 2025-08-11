@@ -3,17 +3,17 @@ package com.ldgen.ldgenaimaster.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.ldgen.ldgenaimaster.exception.BusinessException;
 import com.ldgen.ldgenaimaster.exception.ErrorCode;
 import com.ldgen.ldgenaimaster.model.dto.user.UserQueryRequest;
-import com.ldgen.ldgenaimaster.model.enums.UserRoleEnum;
-import com.ldgen.ldgenaimaster.model.vo.user.LoginUserVO;
-import com.ldgen.ldgenaimaster.model.vo.user.UserVO;
-import com.ldgen.ldgenaimaster.service.UserService;
-import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.ldgen.ldgenaimaster.model.entity.User;
 import com.ldgen.ldgenaimaster.mapper.UserMapper;
+import com.ldgen.ldgenaimaster.model.enums.UserRoleEnum;
+import com.ldgen.ldgenaimaster.model.vo.LoginUserVO;
+import com.ldgen.ldgenaimaster.model.vo.UserVO;
+import com.ldgen.ldgenaimaster.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -28,10 +28,10 @@ import static com.ldgen.ldgenaimaster.constant.UserConstant.USER_LOGIN_STATE;
 /**
  * 用户 服务层实现。
  *
- * @author <a href="https://github.com/ldgen404/">程序员李大根</a>
+ * @author <a href="https://github.com/ldgen404">程序员李大根</a>
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User>  implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -181,7 +181,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>  implements U
     @Override
     public String getEncryptPassword(String userPassword) {
         // 盐值，混淆密码
-        final String SALT = "ldgen";
+        final String SALT = "yupi";
         return DigestUtils.md5DigestAsHex((userPassword + SALT).getBytes(StandardCharsets.UTF_8));
     }
 }

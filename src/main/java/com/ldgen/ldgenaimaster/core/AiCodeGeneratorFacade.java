@@ -1,7 +1,6 @@
 package com.ldgen.ldgenaimaster.core;
 
 import com.ldgen.ldgenaimaster.ai.AiCodeGeneratorService;
-import com.ldgen.ldgenaimaster.ai.AiCodeGeneratorServiceFactory;
 import com.ldgen.ldgenaimaster.ai.model.HtmlCodeResult;
 import com.ldgen.ldgenaimaster.ai.model.MultiFileCodeResult;
 import com.ldgen.ldgenaimaster.core.parser.CodeParserExecutor;
@@ -17,10 +16,10 @@ import reactor.core.publisher.Flux;
 import java.io.File;
 
 /**
- * AI 代码生成外观类，组合生成和保存功能
+ * AI 代码生成门面类，组合代码生成和保存功能
  */
-@Slf4j
 @Service
+@Slf4j
 public class AiCodeGeneratorFacade {
 
     @Resource
@@ -31,6 +30,7 @@ public class AiCodeGeneratorFacade {
      *
      * @param userMessage     用户提示词
      * @param codeGenTypeEnum 生成类型
+     * @param appId 应用 ID
      * @return 保存的目录
      */
     public File generateAndSaveCode(String userMessage, CodeGenTypeEnum codeGenTypeEnum, Long appId) {
@@ -58,6 +58,7 @@ public class AiCodeGeneratorFacade {
      *
      * @param userMessage     用户提示词
      * @param codeGenTypeEnum 生成类型
+     * @param appId 应用 ID
      * @return 保存的目录
      */
     public Flux<String> generateAndSaveCodeStream(String userMessage, CodeGenTypeEnum codeGenTypeEnum, Long appId) {
@@ -71,7 +72,7 @@ public class AiCodeGeneratorFacade {
             }
             case MULTI_FILE -> {
                 Flux<String> codeStream = aiCodeGeneratorService.generateMultiFileCodeStream(userMessage);
-                yield processCodeStream(codeStream, CodeGenTypeEnum.MULTI_FILE, appIds);
+                yield processCodeStream(codeStream, CodeGenTypeEnum.MULTI_FILE, appId);
             }
             default -> {
                 String errorMessage = "不支持的生成类型：" + codeGenTypeEnum.getValue();
@@ -85,6 +86,7 @@ public class AiCodeGeneratorFacade {
      *
      * @param codeStream  代码流
      * @param codeGenType 代码生成类型
+     * @param appId 应用 ID
      * @return 流式响应
      */
     private Flux<String> processCodeStream(Flux<String> codeStream, CodeGenTypeEnum codeGenType, Long appId) {

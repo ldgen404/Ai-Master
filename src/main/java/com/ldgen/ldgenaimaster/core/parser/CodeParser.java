@@ -3,7 +3,7 @@ package com.ldgen.ldgenaimaster.core.parser;
 /**
  * 代码解析器策略接口
  * 
- * @author Ldgen
+ * @author yupi
  */
 public interface CodeParser<T> {
 

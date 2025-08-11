@@ -1,11 +1,11 @@
 package com.ldgen.ldgenaimaster.service;
 
-import com.ldgen.ldgenaimaster.model.dto.user.UserQueryRequest;
-import com.ldgen.ldgenaimaster.model.vo.user.LoginUserVO;
-import com.ldgen.ldgenaimaster.model.vo.user.UserVO;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
+import com.ldgen.ldgenaimaster.model.dto.user.UserQueryRequest;
 import com.ldgen.ldgenaimaster.model.entity.User;
+import com.ldgen.ldgenaimaster.model.vo.LoginUserVO;
+import com.ldgen.ldgenaimaster.model.vo.UserVO;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
@@ -13,9 +13,10 @@ import java.util.List;
 /**
  * 用户 服务层。
  *
- * @author <a href="https://github.com/ldgen404/">程序员李大根</a>
+ * @author <a href="https://github.com/ldgen404">程序员李大根</a>
  */
 public interface UserService extends IService<User> {
+
     /**
      * 用户注册
      *
@@ -90,5 +91,4 @@ public interface UserService extends IService<User> {
      * @return 加密后的用户密码
      */
     String getEncryptPassword(String userPassword);
-
 }

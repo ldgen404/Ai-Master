@@ -9,12 +9,12 @@ import com.ldgen.ldgenaimaster.model.enums.CodeGenTypeEnum;
 /**
  * 多文件代码保存器
  *
- * @author  * @author ldgen
+ * @author yupi
  */
 public class MultiFileCodeFileSaverTemplate extends CodeFileSaverTemplate<MultiFileCodeResult> {
 
     @Override
-    public CodeGenTypeEnum getCodeType() {
+    protected CodeGenTypeEnum getCodeType() {
         return CodeGenTypeEnum.MULTI_FILE;
     }
 

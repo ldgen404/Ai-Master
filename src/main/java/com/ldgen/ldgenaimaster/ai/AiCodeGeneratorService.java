@@ -5,9 +5,6 @@ import com.ldgen.ldgenaimaster.ai.model.MultiFileCodeResult;
 import dev.langchain4j.service.SystemMessage;
 import reactor.core.publisher.Flux;
 
-/**
- *
- */
 public interface AiCodeGeneratorService {
 
     /**

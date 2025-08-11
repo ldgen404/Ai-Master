@@ -1,6 +1,7 @@
 package com.ldgen.ldgenaimaster.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.mybatisflex.core.paginate.Page;
 import com.ldgen.ldgenaimaster.annotation.AuthCheck;
 import com.ldgen.ldgenaimaster.common.BaseResponse;
 import com.ldgen.ldgenaimaster.common.DeleteRequest;
@@ -10,19 +11,16 @@ import com.ldgen.ldgenaimaster.exception.BusinessException;
 import com.ldgen.ldgenaimaster.exception.ErrorCode;
 import com.ldgen.ldgenaimaster.exception.ThrowUtils;
 import com.ldgen.ldgenaimaster.model.dto.user.*;
-import com.ldgen.ldgenaimaster.model.entity.User;
-import com.ldgen.ldgenaimaster.model.vo.user.LoginUserVO;
-import com.ldgen.ldgenaimaster.model.vo.user.UserVO;
-import com.ldgen.ldgenaimaster.service.UserService;
-import com.mybatisflex.core.paginate.Page;
-
+import com.ldgen.ldgenaimaster.model.vo.LoginUserVO;
+import com.ldgen.ldgenaimaster.model.vo.UserVO;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import com.ldgen.ldgenaimaster.model.entity.User;
+import com.ldgen.ldgenaimaster.service.UserService;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,7 +28,7 @@ import java.util.List;
 /**
  * 用户 控制层。
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
+ * @author <a href="https://github.com/ldgen404">程序员李大根</a>
  */
 @RestController
 @RequestMapping("/user")
@@ -46,7 +44,7 @@ public class UserController {
      * @return 注册结果
      */
     @PostMapping("/register")
-    public BaseResponse<Long> register(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         ThrowUtils.throwIf(userRegisterRequest == null, ErrorCode.PARAMS_ERROR);
         String userAccount = userRegisterRequest.getUserAccount();
         String userPassword = userRegisterRequest.getUserPassword();

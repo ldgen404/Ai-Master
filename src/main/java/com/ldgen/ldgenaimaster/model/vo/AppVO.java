@@ -1,14 +1,15 @@
-package com.ldgen.ldgenaimaster.model.dto.app;
+package com.ldgen.ldgenaimaster.model.vo;
 
-import com.ldgen.ldgenaimaster.common.PageRequest;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
+/**
+ * 应用封装类
+ */
 @Data
-public class AppQueryRequest extends PageRequest implements Serializable {
+public class AppVO implements Serializable {
 
     /**
      * id
@@ -41,6 +42,11 @@ public class AppQueryRequest extends PageRequest implements Serializable {
     private String deployKey;
 
     /**
+     * 部署时间
+     */
+    private LocalDateTime deployedTime;
+
+    /**
      * 优先级
      */
     private Integer priority;
@@ -49,6 +55,21 @@ public class AppQueryRequest extends PageRequest implements Serializable {
      * 创建用户id
      */
     private Long userId;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 创建用户信息
+     */
+    private UserVO user;
 
     private static final long serialVersionUID = 1L;
 } 
