@@ -5,6 +5,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.ldgen.ldgenaimaster.model.enums.ChatHistoryMessageTypeEnum;
+import com.ldgen.ldgenaimaster.service.ChatHistoryService;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.ldgen.ldgenaimaster.constant.AppConstant;
@@ -22,10 +24,12 @@ import com.ldgen.ldgenaimaster.model.vo.UserVO;
 import com.ldgen.ldgenaimaster.service.AppService;
 import com.ldgen.ldgenaimaster.service.UserService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.io.File;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +43,7 @@ import java.util.stream.Collectors;
  * @author <a href="https://github.com/ldgen404">程序员李大根</a>
  */
 @Service
+@Slf4j
 public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppService {
 
     @Resource
@@ -47,6 +52,15 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
     @Resource
     private AiCodeGeneratorFacade aiCodeGeneratorFacade;
 
+    @Resource
+    private ChatHistoryService chatHistoryService;
+
+    /**
+     * @param appId     应用 ID
+     * @param message   提示词
+     * @param loginUser 登录用户
+     * @return
+     */
     @Override
     public Flux<String> chatToGenCode(Long appId, String message, User loginUser) {
         // 1. 参数校验
@@ -65,10 +79,38 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "应用代码生成类型错误");
         }
-        // 5. 调用 AI 生成代码
-        return aiCodeGeneratorFacade.generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
+        //5.通过校验后，添加用户消息到对话历史
+        chatHistoryService.addChatMessage(appId, message, ChatHistoryMessageTypeEnum.USER.getValue(), loginUser.getId());
+        //6.调用 AI 生成代码（流式）
+        Flux<String> contenFlux = aiCodeGeneratorFacade.generateAndSaveCodeStream(message, codeGenTypeEnum, appId);
+        //7.收集AI响应内容并在完成后记录到对话历史中
+        StringBuilder aiResponseBuilder = new StringBuilder();
+        return contenFlux
+                .map(chunk -> {
+                            //收集AI相应内容
+                            aiResponseBuilder.append(chunk);
+                            return chunk;
+                        }
+                )
+                .doOnComplete(() -> {
+                    //流式响应完成后，添加AI消息到对话历史中
+                    String aiResponse = aiResponseBuilder.toString();
+                    if (StrUtil.isNotBlank(aiResponse)) {
+                        chatHistoryService.addChatMessage(appId, aiResponse, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
+                    }
+                })
+                .doOnError(error -> {
+                    //如果AI回复失败，也要记错误消息
+                    String errorMessage = "AI回复失败" + error.getMessage();
+                    chatHistoryService.addChatMessage(appId, errorMessage, ChatHistoryMessageTypeEnum.AI.getValue(), loginUser.getId());
+                });
     }
 
+    /**
+     * @param appId     应用 ID
+     * @param loginUser 登录用户
+     * @return
+     */
     @Override
     public String deployApp(Long appId, User loginUser) {
         // 1. 参数校验
@@ -114,6 +156,10 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         return String.format("%s/%s", AppConstant.CODE_DEPLOY_HOST, deployKey);
     }
 
+    /**
+     * @param app
+     * @return
+     */
     @Override
     public AppVO getAppVO(App app) {
         if (app == null) {
@@ -131,6 +177,10 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         return appVO;
     }
 
+    /**
+     * @param appList
+     * @return
+     */
     @Override
     public List<AppVO> getAppVOList(List<App> appList) {
         if (CollUtil.isEmpty(appList)) {
@@ -150,6 +200,10 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         }).collect(Collectors.toList());
     }
 
+    /**
+     * @param appQueryRequest
+     * @return
+     */
     @Override
     public QueryWrapper getQueryWrapper(AppQueryRequest appQueryRequest) {
         if (appQueryRequest == null) {
@@ -176,4 +230,27 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
                 .eq("userId", userId)
                 .orderBy(sortField, "ascend".equals(sortOrder));
     }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        if (id == null) {
+            return false;
+        }
+        //转换为Long类型
+        Long appId = Long.valueOf(id.toString());
+        if (appId <= 0) {
+            return false;
+        }
+        //删除关联的对话历史
+        try {
+            chatHistoryService.deleteByAppId(appId);
+        } catch (Exception e) {
+            //记录日志但不阻止应用删除
+            log.error("删除应用关联对话历史失败：{}", e.getMessage());
+        }
+
+        return super.removeById(appId);
+    }
+
+
 }
