@@ -2,7 +2,9 @@ package com.ldgen.ldgenaimaster.ai;
 
 import com.ldgen.ldgenaimaster.ai.model.HtmlCodeResult;
 import com.ldgen.ldgenaimaster.ai.model.MultiFileCodeResult;
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.UserMessage;
 import reactor.core.publisher.Flux;
 
 public interface AiCodeGeneratorService {
@@ -42,4 +44,7 @@ public interface AiCodeGeneratorService {
      */
     @SystemMessage(fromResource = "prompt/codegen-multi-file-system-prompt.txt")
     Flux<String> generateMultiFileCodeStream(String userMessage);
+
+
+
 }

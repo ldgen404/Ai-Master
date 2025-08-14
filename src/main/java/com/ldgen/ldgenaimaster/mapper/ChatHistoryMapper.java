@@ -6,7 +6,7 @@ import com.ldgen.ldgenaimaster.model.entity.ChatHistory;
 /**
  * 对话历史 映射层。
  *
- * @author <a href="https://github.com/liyupi">程序员李大根</a>
+ * @author <a href="https://github.com/ldgen404">程序员李大根</a>
  */
 public interface ChatHistoryMapper extends BaseMapper<ChatHistory> {
 

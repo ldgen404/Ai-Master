@@ -1,6 +1,7 @@
 package com.ldgen.ldgenaimaster.core;
 
 import com.ldgen.ldgenaimaster.ai.AiCodeGeneratorService;
+import com.ldgen.ldgenaimaster.ai.AiCodeGeneratorServiceFactory;
 import com.ldgen.ldgenaimaster.ai.model.HtmlCodeResult;
 import com.ldgen.ldgenaimaster.ai.model.MultiFileCodeResult;
 import com.ldgen.ldgenaimaster.core.parser.CodeParserExecutor;
@@ -10,6 +11,7 @@ import com.ldgen.ldgenaimaster.exception.ErrorCode;
 import com.ldgen.ldgenaimaster.model.enums.CodeGenTypeEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -18,12 +20,13 @@ import java.io.File;
 /**
  * AI 代码生成门面类，组合代码生成和保存功能
  */
-@Service
+@Configuration
 @Slf4j
 public class AiCodeGeneratorFacade {
 
     @Resource
-    private AiCodeGeneratorService aiCodeGeneratorService;
+    private AiCodeGeneratorServiceFactory aiCodeGeneratorServiceFactory;
+
 
     /**
      * 统一入口：根据类型生成并保存代码
@@ -37,6 +40,8 @@ public class AiCodeGeneratorFacade {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "生成类型不能为空");
         }
+        // 根据 appId 获取相应的 AI 服务实例
+        AiCodeGeneratorService aiCodeGeneratorService = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         return switch (codeGenTypeEnum) {
             case HTML -> {
                 HtmlCodeResult result = aiCodeGeneratorService.generateHtmlCode(userMessage);
@@ -65,6 +70,8 @@ public class AiCodeGeneratorFacade {
         if (codeGenTypeEnum == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "生成类型不能为空");
         }
+        // 根据 appId 获取相应的 AI 服务实例
+        AiCodeGeneratorService aiCodeGeneratorService = aiCodeGeneratorServiceFactory.getAiCodeGeneratorService(appId);
         return switch (codeGenTypeEnum) {
             case HTML -> {
                 Flux<String> codeStream = aiCodeGeneratorService.generateHtmlCodeStream(userMessage);
